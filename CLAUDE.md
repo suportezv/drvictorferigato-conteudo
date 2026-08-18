@@ -19,10 +19,10 @@ Este repositório é o **Dr. Victor Ferigato Conteúdo Studio**: edição e agen
 
 ## IDs e contas
 
-- Instagram da marca: **@drvictorferigato** (conectado no Metricool; demais redes: PENDENTE conferir).
+- Instagram da marca: **@drvictorferigato** (conectado no Metricool; confirmado via getBrandSettings em 2026-08-18 que é a ÚNICA rede conectada por ora; ao conectar novas redes, aplicar a regra de agendamento abaixo).
 - Metricool: conta da agência suporte@zavi.ag. Marca no painel: **"drvictorferigato", blog_id 6606429** (confirmado via getBrandSettings em 2026-08-18), timezone America/Sao_Paulo. Melhor horário de publicação: medir com getBestTimeToPostByNetwork após conectar.
 - **Regra de agendamento (todas as marcas da agência)**: sempre incluir TODOS os canais conectados da marca no post, exceto YouTube horizontal. YouTube entra como **Short** (`youtubeData: {type: "short", title, madeForKids: false}`); Instagram como REEL; Facebook como REEL; TikTok, LinkedIn e Pinterest com networkData padrão. Nunca publicar vídeo vertical como YouTube horizontal comum.
-- Kairogen: conta da agência. Plano e créditos: **PENDENTE conferir** antes de usar para b-roll.
+- Kairogen: conta da agência (suporte@zavi.ag). Plano **FREE, 0 créditos** (conferido via get_me_context em 2026-08-18): **não usar para b-roll até fazer upgrade/comprar créditos**. Restam 5 usos grátis de KairoBoost; concorrência máx 1 geração.
 - ElevenLabs: chave `sk_` (51 chars) na env var `ELEVENLABS_API_KEY` do environment; o setup grava em `.env` na raiz do video-use. Escopos necessários: TTS, STT Scribe, sound-generation, voices_read. Plano e cota: **PENDENTE conferir**. Voz da marca para narração: **PENDENTE (voice_id, modelo e settings)**.
 - Drive (brutos): pasta do projeto **PENDENTE: criar/apontar** (padrão: pasta com "qualquer pessoa com o link: leitor" para download direto).
 
