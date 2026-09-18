@@ -7,6 +7,7 @@ Estúdio de edição e agendamento para as redes da **Dr. Victor Ferigato**. Fra
 ## Persona e voz do perfil
 
 - **PENDENTE**: persona, tom de voz e posicionamento da Dr. Victor Ferigato (definir no primeiro briefing).
+- Pistas já encontradas no Drive (variações de credencial nas bios, o produto Spotter, acento laranja, fontes Akkordeon e Poppins) estão no `CLAUDE.md`, seção "Pistas de marca". **Não viram regra até o briefing confirmar.**
 - CTA padrão: **PENDENTE (CTA padrão da marca)**.
 - Quando citar a criadora ou criador: credencial sempre completa, **"PENDENTE (credencial completa de quem cria, para citação em texto público)"**.
 
@@ -32,6 +33,23 @@ Padrão validado da agência:
 - Palavrão não corta: **bipa**.
 - Trilha discreta (vol ~0.12 a 0.15) gerada via ElevenLabs sound-generation; SFX (whoosh, impact, riser, scratch) sincronizados aos cortes.
 - Duração alvo: **20 a 60s**. Loudness final: **-14 LUFS**.
+
+## Escolha do framework de motion: HyperFrames ou Remotion
+
+O estúdio mantém os dois, e a escolha **não é preferência do momento**: cada peça declara o seu no `BRIEFING.md`, na primeira linha. Sem isso, quem pegar o projeto depois não sabe onde mexer.
+
+**O que decide**: a ponte entre os dois só existe num sentido. Há a skill `remotion-to-hyperframes`; **não existe o inverso**. Então peça feita em HyperFrames é definitiva, e peça feita em Remotion ainda pode migrar. Na dúvida, Remotion é a aposta reversível.
+
+| Use **HyperFrames** quando | Use **Remotion** quando |
+|---|---|
+| É peça de série recorrente, na gramática documentada do estúdio | A peça é exceção, fora do padrão da série |
+| Você quer o fluxo pronto: brief, storyboard, registry de ~400 blocos, legendas, áudio, render em nuvem | A composição precisa de lógica de programação, dados ou parametrização |
+| O visual pedido já existe no registry (scanlines, glitch, gráfico, janela de terminal) | Você vai gerar **N variações** da mesma peça mudando nome, cupom, idioma ou número |
+| Ninguém vai reprocessar a peça em outro framework | Há chance real de a peça mudar de destino depois |
+
+**Padrão declarado: HyperFrames.** Ele é o que está integrado ao fluxo do estúdio e o que tem as 20 skills. O Remotion entra por decisão consciente, não por inércia.
+
+**Custo de manter os dois, para vigiar**: dois `node_modules`, dois caminhos de render e dois lugares onde a paleta pode divergir. O terceiro está mitigado porque os tokens do Remotion vivem em `remotion/src/marca.ts`, mas **se a paleta da marca mudar, atualizar os dois lados**. Nesta marca a paleta ainda é **PENDENTE**: o `marca.ts` carrega valores neutros de placeholder até o briefing confirmar as cores e a fonte. Se em alguns meses o Remotion não tiver sido usado em nada, ele vira peso morto e se corta; o inverso não vale, porque o HyperFrames é o que sustenta o fluxo.
 
 ## Fórmula da caption
 
