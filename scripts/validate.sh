@@ -83,11 +83,28 @@ else
   fi
 fi
 
-echo "== 6. Skills registradas =="
+echo "== 6. HyperFrames (render local) =="
+HF_SHELL="${HYPERFRAMES_BROWSER_PATH:-$(ls -d /opt/pw-browsers/chromium_headless_shell-*/chrome-linux/headless_shell 2>/dev/null | sort -V | tail -1)}"
+if [ -n "$HF_SHELL" ] && [ -x "$HF_SHELL" ]; then
+  export HYPERFRAMES_BROWSER_PATH="$HF_SHELL"
+  HFDOC=$(npx --yes hyperframes doctor 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+  echo "$HFDOC" | grep -qE '.\s+Chrome\s' && echo "$HFDOC" | grep -E '.\s+Chrome\s' | grep -q '✓' \
+    && echo "OK (Chrome resolvido: $HF_SHELL)" || echo "FALHA: doctor nao aceitou o Chrome em $HF_SHELL"
+else
+  echo "FALHA: headless_shell do Playwright ausente; render do HyperFrames indisponivel"
+fi
+# O template do HyperFrames carrega GSAP de cdn.jsdelivr.net, bloqueado na
+# allowlist: o render aborta com sub_timeline_script_failure. Contorno validado:
+# baixar pelo npm (liberado) e servir local. Ver gotcha no CLAUDE.md.
+curl -s -o /dev/null -w "%{http_code}" --max-time 15 https://cdn.jsdelivr.net/ 2>/dev/null | grep -q '^2' \
+  && echo "OK (cdn.jsdelivr.net liberado; template roda sem vendorizar GSAP)" \
+  || echo "AVISO: cdn.jsdelivr.net bloqueado; vendorizar GSAP pelo npm em cada projeto (ver CLAUDE.md)"
+
+echo "== 7. Skills registradas =="
 [ -e ~/.claude/skills/video-use/SKILL.md ] && echo "OK video-use" || echo "PENDENTE video-use"
 HF=$(ls -d ~/.claude/skills/*/ 2>/dev/null | while read -r d; do [ -f "$d/SKILL.md" ] && basename "$d"; done | grep -cE 'hyperframes|media-use|motion-graphics|embedded-captions')
 if [ "${HF:-0}" -ge 4 ]; then echo "OK hyperframes ($HF skills com SKILL.md)"; else echo "PENDENTE hyperframes (rode scripts/setup.sh)"; fi
 
-echo "== 7. Na sessão do Claude, validar ainda: =="
+echo "== 8. Na sessão do Claude, validar ainda: =="
 echo " - Metricool: getBrandSettings lista a marca \"drvictorferigato\" com blog_id 6606429"
 echo " - Kairogen: get_me_context mostra plano e créditos da conta da agência (ver CLAUDE.md)"
