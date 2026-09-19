@@ -106,6 +106,21 @@ if ! npx --yes hyperframes skills update 2>/dev/null; then
   echo "$n skills do hyperframes registradas a partir de $HYPERFRAMES/skills"
 fi
 
+# O HyperFrames precisa de um Chrome para renderizar e o `browser ensure` dele
+# tenta baixar um build fixado de um host fora da allowlist. O container ja tem
+# o headless_shell do Playwright, que serve. A variavel e exportada tambem no
+# ~/.bashrc porque o setup roda num shell que morre no fim do boot.
+HF_SHELL="$(ls -d /opt/pw-browsers/chromium_headless_shell-*/chrome-linux/headless_shell 2>/dev/null | sort -V | tail -1)"
+if [ -n "$HF_SHELL" ] && [ -x "$HF_SHELL" ]; then
+  export HYPERFRAMES_BROWSER_PATH="$HF_SHELL"
+  if ! grep -q 'HYPERFRAMES_BROWSER_PATH' ~/.bashrc 2>/dev/null; then
+    printf 'export HYPERFRAMES_BROWSER_PATH=%s\n' "$HF_SHELL" >> ~/.bashrc
+  fi
+  echo "HYPERFRAMES_BROWSER_PATH -> $HF_SHELL"
+else
+  echo "AVISO: headless_shell do Playwright nao encontrado; render do HyperFrames indisponivel"
+fi
+
 echo "== 4/6 Remotion =="
 # O Remotion e React; as composicoes ficam versionadas em remotion/ e so as
 # dependencias sao instaladas aqui. O render usa o headless_shell do Playwright
@@ -120,9 +135,10 @@ else
   echo "remotion/package.json ausente; passo pulado"
 fi
 
-echo "== 5/6 Python (PIL para overlays, numpy para batidas) =="
+echo "== 5/6 Python (PIL para overlays, numpy para batidas, colour-science para LUT) =="
 python3 -c 'import PIL' 2>/dev/null || pip3 install pillow || echo "AVISO: pillow não instalado (pypi bloqueado). Lettering/overlays indisponíveis."
 python3 -c 'import numpy' 2>/dev/null || pip3 install numpy || echo "AVISO: numpy não instalado (pypi bloqueado). Detecção de batidas indisponível."
+python3 -c 'import colour' 2>/dev/null || pip3 install colour-science || echo "AVISO: colour-science não instalado (pypi bloqueado). LUT S-Log2 (scripts/gera_lut_slog2.py) indisponível."
 
 echo "== 6/6 estúdio =="
 STUDIO_NAME="$(basename "$REPO_ROOT")"
